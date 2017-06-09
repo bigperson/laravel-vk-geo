@@ -6,7 +6,7 @@
 
 Пакет использует [atehnix/vk-client](https://github.com/atehnix/vk-client) для выполнения запросов. Используются **синхронные запросы**, если вы хотите постоянно обновлять данные, то используйте пакет [atehnix/laravel-vk-requester](https://github.com/atehnix/laravel-vk-requester)
 
-## Сожержание
+## Содержание
 * Установка
 * Импорт данных
 * Использование
