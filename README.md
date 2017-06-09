@@ -1,5 +1,4 @@
 # Laravel VK Geo
-[![Packagist Version](https://img.shields.io/packagist/v/bigperson/laravel-vk-geo.svg)](https://packagist.org/packages/bigperson/laravel-vk-geo)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/bigperson/laravel-vk-geo/master/LICENSE)
 
 Пакет предоставляет удобный способ ипорта стран, регионов и городов используя api vk.com.
