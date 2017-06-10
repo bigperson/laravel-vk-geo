@@ -40,12 +40,18 @@ class ImportCountryCommand extends AbstractCommand
     private function addCountries(array $items)
     {
         foreach ($items as $item){
-            $country = Country::create([
-                'id' => $item['id'],
-                'title' => $item['title']
-            ]);
+            \DB::transaction(function () use ($item) {
+                $country = Country::create([
+                    'id' => $item['id'],
+                    'title' => $item['title']
+                ]);
 
-            echo $country->title." imported \n";
+                if (!$country) {
+                    $this->error('Country '.$country->title.' not imported!');
+                } else {
+                    $this->line('Country '.$country->title.' successfully imported');
+                }
+            });
         }
     }
 
@@ -72,7 +78,7 @@ class ImportCountryCommand extends AbstractCommand
             $this->addCountries($response['response']['items']);
             $this->makeRequest($offset + $count, $count);
         } else {
-            echo "end\n";
+            $this->info('Country import completed successfully');
         }
     }
 }

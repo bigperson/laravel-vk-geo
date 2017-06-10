@@ -54,8 +54,8 @@ class ImportCitiesCommand extends AbstractCommand
         }
 
         $regions->each(function ($region) {
-            echo "Start import cities for country ".$region->country->title." region $region->title\n";
-            $this->makeRequest($region->country->id, $region->id);
+            $this->info("Start import cities for country ".$region->country->title." region $region->title");
+            $this->makeRequest($region);
         });
     }
 
@@ -71,31 +71,37 @@ class ImportCitiesCommand extends AbstractCommand
             if (isset($item['area'])) {
                 $area = $item['area'];
             }
-            $city = City::create([
-                'id'         => $item['id'],
-                'title'      => $item['title'],
-                'country_id' => $countryId,
-                'region_id'  => $regionId,
-                'area'       => $area,
-            ]);
 
-            echo $city->title." imported \n";
+            \DB::transaction(function () use ($item, $countryId, $regionId, $area) {
+                $city = City::create([
+                    'id'         => $item['id'],
+                    'title'      => $item['title'],
+                    'country_id' => $countryId,
+                    'region_id'  => $regionId,
+                    'area'       => $area,
+                ]);
+
+                if (!$city) {
+                    $this->error('City '.$city->title.' not imported!');
+                } else {
+                    $this->line($city->title.'imported');
+                }
+            });
         }
     }
 
     /**
-     * @param      $countryId
-     * @param null $regionId
-     * @param int  $offset
-     * @param int  $count
+     * @param Region $region
+     * @param int    $offset
+     * @param int    $count
      */
-    private function makeRequest($countryId, $regionId, $offset = 0, $count = 1000)
+    private function makeRequest(Region $region, $offset = 0, $count = 1000)
     {
         $request = new Request(
             'database.getCities',
             [
-                'country_id' => $countryId,
-                'region_id'  => $regionId,
+                'country_id' => $region->country->id,
+                'region_id'  => $region->id,
                 'offset'     => $offset,
                 'count'      => $count,
             ]
@@ -106,10 +112,10 @@ class ImportCitiesCommand extends AbstractCommand
         usleep(config('vk-geo.delay', 1000));
 
         if (isset($response['response']['items']) && count($response['response']['items']) > 0) {
-            $this->addCities($response['response']['items'], $countryId, $regionId);
-            $this->makeRequest($countryId, $offset + $count, $count);
+            $this->addCities($response['response']['items'], $region->country->id, $region->id);
+            $this->makeRequest($region, $offset + $count, $count);
         } else {
-            echo "end\n";
+            $this->info('Import cities successfully completed for '.$region->title.' '.$region->country->title);
         }
     }
 }

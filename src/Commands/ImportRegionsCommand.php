@@ -34,16 +34,15 @@ class ImportRegionsCommand extends AbstractCommand
 
         $countryIds = $this->option('countryId');
 
-        if(count($countryIds)) {
+        if (count($countryIds)) {
             $countries = Country::whereIn('id', $countryIds)->get();
         } else {
             $countries = Country::all();
         }
 
         $countries->each(function ($country) {
-            echo "Start import regions for $country->title\n";
-
-            $this->makeRequest($country->id);
+            $this->info('Start import regions for'.$country->title);
+            $this->makeRequest($country);
         });
     }
 
@@ -54,27 +53,34 @@ class ImportRegionsCommand extends AbstractCommand
     private function addRegions(array $items, int $countryId)
     {
         foreach ($items as $item) {
-            $region = Region::create([
-                'id'         => $item['id'],
-                'title'      => $item['title'],
-                'country_id' => $countryId,
-            ]);
 
-            echo $region->title." imported \n";
+            \DB::transaction(function () use ($item, $countryId) {
+                $region = Region::create([
+                    'id'         => $item['id'],
+                    'title'      => $item['title'],
+                    'country_id' => $countryId,
+                ]);
+
+                if (!$region) {
+                    $this->error('Region '.$region->title.' not imported!');
+                } else {
+                    $this->line('Region '.$region->title.' successfully imported');
+                }
+            });
         }
     }
 
     /**
-     * @param     $countryId
-     * @param int $offset
-     * @param int $count
+     * @param Country $country
+     * @param int     $offset
+     * @param int     $count
      */
-    private function makeRequest($countryId, $offset = 0, $count = 1000)
+    private function makeRequest(Country $country, $offset = 0, $count = 1000)
     {
         $request = new Request(
             'database.getRegions',
             [
-                'country_id' => $countryId,
+                'country_id' => $country->id,
                 'offset'     => $offset,
                 'count'      => $count,
             ]
@@ -85,10 +91,10 @@ class ImportRegionsCommand extends AbstractCommand
         usleep(config('vk-geo.delay', 1000));
 
         if (isset($response['response']['items']) && count($response['response']['items']) > 0) {
-            $this->addRegions($response['response']['items'], $countryId);
-            $this->makeRequest($countryId, $offset + $count, $count);
+            $this->addRegions($response['response']['items'], $country->id);
+            $this->makeRequest($country, $offset + $count, $count);
         } else {
-            echo "end\n";
+            $this->info('Import regions successfully completed for '.$country->title);
         }
     }
 }
