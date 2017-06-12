@@ -57,6 +57,14 @@ class ImportCitiesCommand extends AbstractCommand
             $this->info("Start import cities for country ".$region->country->title." region $region->title");
             $this->makeRequest($region);
         });
+
+        /**
+         * Api vk.com do not transfer these two cities by region for Russia
+         */
+        if(in_array(1, $countryIds)) {
+            $this->importMsk();
+            $this->importSpb();
+        }
     }
 
      /**
@@ -117,5 +125,55 @@ class ImportCitiesCommand extends AbstractCommand
         } else {
             $this->info('Import cities successfully completed for '.$region->title.' '.$region->country->title);
         }
+    }
+
+    /**
+     * Import Moscow
+     *
+     * @return void
+     */
+    private function importMsk()
+    {
+        $this->info("Start import Moscow and SPB");
+
+        $request = new Request(
+            'database.getCities',
+            [
+                'country_id' => 1,
+                'q'     => 'Москва',
+                'count' => 1
+            ]
+        );
+
+        $response = $this->client->send($request);
+
+        usleep(config('vk-geo.delay', 1000));
+
+        $this->addCities($response['response']['items'], 1, 1053480);
+    }
+
+    /**
+     * Import SPB
+     *
+     * @return void
+     */
+    private function importSpb()
+    {
+        $this->info("Start import Sankt-Peterburg");
+
+        $request = new Request(
+            'database.getCities',
+            [
+                'country_id' => 1,
+                'q'     => 'Санкт-Петербург',
+                'count' => 1
+            ]
+        );
+
+        $response = $this->client->send($request);
+
+        usleep(config('vk-geo.delay', 1000));
+
+        $this->addCities($response['response']['items'], 1, 1045244);
     }
 }
