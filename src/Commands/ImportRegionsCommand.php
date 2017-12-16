@@ -2,7 +2,6 @@
 
 namespace Bigperson\VkGeo\Commands;
 
-use ATehnix\VkClient\Client;
 use ATehnix\VkClient\Requests\Request;
 use Bigperson\VkGeo\Models\Country;
 use Bigperson\VkGeo\Models\Region;
@@ -53,7 +52,6 @@ class ImportRegionsCommand extends AbstractCommand
     private function addRegions(array $items, int $countryId)
     {
         foreach ($items as $item) {
-
             \DB::transaction(function () use ($item, $countryId) {
                 $region = Region::create([
                     'id'         => $item['id'],

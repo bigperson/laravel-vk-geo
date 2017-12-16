@@ -3,9 +3,6 @@
 namespace Bigperson\VkGeo\Commands;
 
 use ATehnix\VkClient\Client;
-use ATehnix\VkClient\Requests\Request;
-use Bigperson\VkGeo\Models\Country;
-use Bigperson\VkGeo\Models\Region;
 use Illuminate\Console\Command;
 
 abstract class AbstractCommand extends Command

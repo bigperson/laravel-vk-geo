@@ -3,9 +3,7 @@
 namespace Bigperson\VkGeo\Models;
 
 /**
- * Class Region
- *
- * @package Bigperson\VkGeo\Models
+ * Class Region.
  */
 class Region extends AbstractModel
 {
