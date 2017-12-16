@@ -3,9 +3,7 @@
 namespace Bigperson\VkGeo\Models;
 
 /**
- * Class City
- *
- * @package Bigperson\VkGeo\Models
+ * Class City.
  */
 class City extends AbstractModel
 {

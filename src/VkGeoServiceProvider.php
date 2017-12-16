@@ -9,9 +9,7 @@ use Bigperson\VkGeo\Commands\ImportRegionsCommand;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class VkGeoServiceProvider
- *
- * @package Bigperson\VkGeo
+ * Class VkGeoServiceProvider.
  */
 class VkGeoServiceProvider extends ServiceProvider
 {
@@ -44,7 +42,7 @@ class VkGeoServiceProvider extends ServiceProvider
     }
 
     /**
-     * Booting console commands
+     * Booting console commands.
      *
      * @return void
      */

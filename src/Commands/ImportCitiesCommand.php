@@ -2,7 +2,6 @@
 
 namespace Bigperson\VkGeo\Commands;
 
-use ATehnix\VkClient\Client;
 use ATehnix\VkClient\Requests\Request;
 use Bigperson\VkGeo\Models\City;
 use Bigperson\VkGeo\Models\Country;
@@ -54,20 +53,20 @@ class ImportCitiesCommand extends AbstractCommand
         }
 
         $regions->each(function ($region) {
-            $this->info("Start import cities for country ".$region->country->title." region $region->title");
+            $this->info('Start import cities for country '.$region->country->title." region $region->title");
             $this->makeRequest($region);
         });
 
-        /**
+        /*
          * Api vk.com do not transfer these two cities by region for Russia
          */
-        if(in_array(1, $countryIds)) {
+        if (in_array(1, $countryIds)) {
             $this->importMsk();
             $this->importSpb();
         }
     }
 
-     /**
+    /**
      * @param array $items
      * @param int   $countryId
      * @param int   $regionId
@@ -128,20 +127,20 @@ class ImportCitiesCommand extends AbstractCommand
     }
 
     /**
-     * Import Moscow
+     * Import Moscow.
      *
      * @return void
      */
     private function importMsk()
     {
-        $this->info("Start import Moscow and SPB");
+        $this->info('Start import Moscow and SPB');
 
         $request = new Request(
             'database.getCities',
             [
                 'country_id' => 1,
-                'q'     => 'Москва',
-                'count' => 1
+                'q'          => 'Москва',
+                'count'      => 1,
             ]
         );
 
@@ -153,20 +152,20 @@ class ImportCitiesCommand extends AbstractCommand
     }
 
     /**
-     * Import SPB
+     * Import SPB.
      *
      * @return void
      */
     private function importSpb()
     {
-        $this->info("Start import Sankt-Peterburg");
+        $this->info('Start import Sankt-Peterburg');
 
         $request = new Request(
             'database.getCities',
             [
                 'country_id' => 1,
-                'q'     => 'Санкт-Петербург',
-                'count' => 1
+                'q'          => 'Санкт-Петербург',
+                'count'      => 1,
             ]
         );
 

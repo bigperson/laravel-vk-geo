@@ -5,9 +5,7 @@ namespace Bigperson\VkGeo\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class AbstractModel
- *
- * @package Bigperson\VkGeo\Models
+ * Class AbstractModel.
  */
 class AbstractModel extends Model
 {

@@ -2,7 +2,6 @@
 
 namespace Bigperson\VkGeo\Commands;
 
-use ATehnix\VkClient\Client;
 use ATehnix\VkClient\Requests\Request;
 use Bigperson\VkGeo\Models\Country;
 
@@ -39,11 +38,11 @@ class ImportCountryCommand extends AbstractCommand
      */
     private function addCountries(array $items)
     {
-        foreach ($items as $item){
+        foreach ($items as $item) {
             \DB::transaction(function () use ($item) {
                 $country = Country::create([
-                    'id' => $item['id'],
-                    'title' => $item['title']
+                    'id'    => $item['id'],
+                    'title' => $item['title'],
                 ]);
 
                 if (!$country) {
@@ -65,8 +64,8 @@ class ImportCountryCommand extends AbstractCommand
             'database.getCountries',
             [
                 'need_all' => 1,
-                'offset' => $offset,
-                'count' => $count
+                'offset'   => $offset,
+                'count'    => $count,
             ]
         );
 
@@ -74,7 +73,7 @@ class ImportCountryCommand extends AbstractCommand
 
         usleep(config('vk-geo.delay', 1000));
 
-        if(isset($response['response']['items']) && count($response['response']['items']) > 0) {
+        if (isset($response['response']['items']) && count($response['response']['items']) > 0) {
             $this->addCountries($response['response']['items']);
             $this->makeRequest($offset + $count, $count);
         } else {
