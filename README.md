@@ -1,5 +1,6 @@
 # Laravel VK Geo
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/bigperson/laravel-vk-geo/master/LICENSE)
+[![StyleCI](https://styleci.io/repos/93866951/shield?branch=master)](https://styleci.io/repos/93866951)
 
 Пакет предоставляет удобный способ ипорта стран, регионов и городов используя api vk.com.
 
