@@ -36,8 +36,6 @@ class ImportCitiesCommand extends AbstractCommand
         $countryIds = $this->option('countryId');
         $regionIds = $this->option('regionId');
 
-        $this->clearTable('cities');
-
         if (count($countryIds)) {
             $regions = Region::whereHas('country', function ($query) use ($countryIds) {
                 $query->whereIn('id', $countryIds);
@@ -80,7 +78,7 @@ class ImportCitiesCommand extends AbstractCommand
             }
 
             \DB::transaction(function () use ($item, $countryId, $regionId, $area) {
-                $city = City::create([
+                $city = City::updateOrCreate([
                     'id'         => $item['id'],
                     'title'      => $item['title'],
                     'country_id' => $countryId,
