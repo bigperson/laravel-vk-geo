@@ -4,7 +4,6 @@ namespace Bigperson\VkGeo\Commands;
 
 use ATehnix\VkClient\Requests\Request;
 use Bigperson\VkGeo\Models\City;
-use Bigperson\VkGeo\Models\Country;
 use Bigperson\VkGeo\Models\Region;
 
 class ImportCitiesCommand extends AbstractCommand
